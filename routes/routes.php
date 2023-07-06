@@ -11,6 +11,20 @@ use Pecee\SimpleRouter\SimpleRouter;
 \Pecee\SimpleRouter\SimpleRouter::setDefaultNamespace('Demo\\Controllers');
 
 
-    SimpleRouter::get('/exercíciosIndividuais/SimpleRouter3/public/', 'DefaultController@home')->name('home');
-    SimpleRouter::get('/exercíciosIndividuais/SimpleRouter3/public/contact', 'DefaultController@contact')->name('contact');
-    SimpleRouter::basic('/exercíciosIndividuais/SimpleRouter3/public/companies/{id?}', 'DefaultController@companies')->name('companies');
+    SimpleRouter::get('/exercíciosIndividuais/SimpleRouter3/public/', 'DefaultController@inicio')->name('inicio');
+
+    SimpleRouter::get('/exercíciosIndividuais/SimpleRouter3/public/login', 'LoginController@login')->name('login');
+    SimpleRouter::post('/exercíciosIndividuais/SimpleRouter3/public/login', 'LoginController@login_action')->name('login');
+
+    SimpleRouter::get('/exercíciosIndividuais/SimpleRouter3/public/login/cadastro', 'LoginController@cadastro')->name('cadastro');
+    SimpleRouter::post('/exercíciosIndividuais/SimpleRouter3/public/login/cadastro', 'LoginController@cadastro_action')->name('cadastro');
+
+    SimpleRouter::get('/exercíciosIndividuais/SimpleRouter3/public/home/{id}/sobre', 'DefaultController@sobre')->name('cadastro');
+
+    SimpleRouter::get('/exercíciosIndividuais/SimpleRouter3/public/sair', 'DefaultController@sair')->name('sair');
+
+    SimpleRouter::post('/exercíciosIndividuais/SimpleRouter3/public/ajax/home', 'AjaxController@ajax')->name('ajax');
+    SimpleRouter::basic('/exercíciosIndividuais/SimpleRouter3/public/home', 'DefaultController@home')->name('home');
+    
+
+    SimpleRouter::basic('/exercíciosIndividuais/SimpleRouter3/public/home/adm', 'DefaultController@homeAdm')->name('adm');
