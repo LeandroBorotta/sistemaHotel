@@ -51,10 +51,11 @@ class DefaultController extends Controller
             exit;
         }
         Hotels::avaliacao();
-        $hotels = Hotels::getHotels();
+        $hotels = Hotels::getHotelsAdm();
+
         $this->view('adm.php',[
             'nome' => $email,
-            'hoteis' => $hotels
+            'hoteis' => $hotels,
         ]);
     }
 

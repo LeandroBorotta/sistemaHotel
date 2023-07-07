@@ -21,11 +21,23 @@ class Hotels extends DatabaseConnection{
     private $descricao;
 
     
-    public static function  novoHotel($nome, $localizacao, $preco, $nota){
+    public static function  novoHotel($nome, $localizacao, $descricao, $preco, $banheira, $varanda, $limpezaDiaria, $arCondicionado, $freezer, $quadraEsportiva, $piscina){
         $pdo = self::getPDO();
-        $pdo = $pdo->prepare("INSERT INTO usuarios (email, senha) VALUES (:email, :senha)");
-        $pdo->execute();
+        $stmt = $pdo->prepare("INSERT INTO hoteis (nome, localizacao, descricao, preco, banheira, varanda, limpezaDiaria, arCondicionado, freezer, quadraEsportiva, piscina) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bindValue(1, $nome);
+        $stmt->bindValue(2, $localizacao);
+        $stmt->bindValue(3, $descricao);
+        $stmt->bindValue(4, $preco);
+        $stmt->bindValue(5, $banheira);
+        $stmt->bindValue(6, $varanda);
+        $stmt->bindValue(7, $limpezaDiaria);
+        $stmt->bindValue(8, $arCondicionado);
+        $stmt->bindValue(9, $freezer);
+        $stmt->bindValue(10, $quadraEsportiva);
+        $stmt->bindValue(11, $piscina);
+        $stmt->execute();
         
+        return true;
     }
 
     public static function avaliacao($banheira = 0, $varanda = 0, $limpezaDiaria = 0, $arCondicionado = 0, $freezer = 0, $quadraEsportiva = 0, $piscina = 0){
@@ -140,5 +152,81 @@ class Hotels extends DatabaseConnection{
         
             $hotels = $select->fetchAll(PDO::FETCH_ASSOC);
             return $hotels;
+        }
+
+        public static function getHotelsAdm() {
+            $pdo = self::getPDO();
+            $select = $pdo->prepare("SELECT *, (SELECT COUNT(*) FROM favorites WHERE favorites.hotel_id = hoteis.id) AS num_favorites FROM hoteis ORDER BY nota DESC");
+            $select->execute();
+            
+            $hotels = $select->fetchAll(PDO::FETCH_ASSOC);
+            return $hotels;
+        }
+
+        public static function getHotelById($id){
+            $pdo = self::getPDO();
+            $select = $pdo->prepare("SELECT * from hoteis WHERE id=:id");
+            $select->bindValue(':id', $id);
+            $select->execute();
+            $hotel = $select->fetchAll(PDO::FETCH_ASSOC);
+            return $hotel;
+        }
+
+        public static function atualizarHotel($nome, $localizacao, $descricao, $preco, $banheira, $varanda, $limpezaDiaria, $arCondicionado, $freezer, $quadraEsportiva, $piscina, $id) {
+            $pdo = self::getPDO();
+        
+            $query = "UPDATE hoteis SET nome = :nome, localizacao = :localizacao, descricao = :descricao, preco = :preco, banheira = :banheira, varanda = :varanda, limpezaDiaria = :limpezaDiaria, arCondicionado = :arCondicionado, freezer = :freezer, quadraEsportiva = :quadraEsportiva, piscina = :piscina WHERE id = :id";
+        
+
+            $stmt = $pdo->prepare($query);
+        
+
+            $stmt->bindValue(':nome', $nome);
+            $stmt->bindValue(':localizacao', $localizacao);
+            $stmt->bindValue(':descricao', $descricao);
+            $stmt->bindValue(':preco', $preco);
+            $stmt->bindValue(':banheira', $banheira);
+            $stmt->bindValue(':varanda', $varanda);
+            $stmt->bindValue(':limpezaDiaria', $limpezaDiaria);
+            $stmt->bindValue(':arCondicionado', $arCondicionado);
+            $stmt->bindValue(':freezer', $freezer);
+            $stmt->bindValue(':quadraEsportiva', $quadraEsportiva);
+            $stmt->bindValue(':piscina', $piscina);
+            $stmt->bindValue(':id', $id);
+        
+
+            $stmt->execute();
+        
+            if ($stmt->rowCount() > 0) {
+                return true;
+            } else {
+                return false; 
+            }
+        }
+
+        public static function deletarHotel($id){
+            $pdo = self::getPDO();
+            $delete = $pdo->prepare("DELETE from hoteis where id=:id");
+            $delete->bindValue(':id', $id);
+            $delete->execute();
+
+            if ($delete->rowCount() > 0) {
+                return true; 
+            } else {
+                return false;
+            }
+        }
+
+        public static function deletarFavorito($id){
+            $pdo = self::getPDO();
+            $delete = $pdo->prepare("DELETE from favorites where hotel_id=:id");
+            $delete->bindValue(':id', $id);
+            $delete->execute();
+
+            if ($delete->rowCount() > 0) {
+                return true; 
+            } else {
+                return false;
+            }
         }
 }
