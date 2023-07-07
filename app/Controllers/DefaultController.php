@@ -59,9 +59,25 @@ class DefaultController extends Controller
         ]);
     }
 
-    public function sobre($id = null): string
+    public function sobre($id = null)
     {
-        return 'DefaultController -> companies -> id: ' . $id;
+        session_start();
+
+        $email = isset($_SESSION['email']) ? $_SESSION['email'] : false;
+        $loggedUser = isset($_SESSION['loggedUser']) ? $_SESSION['loggedUser'] : false;
+        $loggedAdm = isset($_SESSION['loggedAdm']) ? $_SESSION['loggedAdm'] : false;
+        
+        if (!$loggedUser && !$loggedAdm) {
+            header("Location: /exercíciosIndividuais/SimpleRouter3/public/login");
+            exit;
+        }
+
+        $hotel = Hotels::getHotelById($id);
+        $this->view('sobre.php', [
+            'hotel' => $hotel,
+            'nome' => $email,
+            'adm' => $loggedAdm
+        ]);
     }
 
     public function sair(){
