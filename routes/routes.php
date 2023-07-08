@@ -19,7 +19,9 @@ use Pecee\SimpleRouter\SimpleRouter;
     SimpleRouter::get('/exercíciosIndividuais/SimpleRouter3/public/login/cadastro', 'LoginController@cadastro')->name('cadastro');
     SimpleRouter::post('/exercíciosIndividuais/SimpleRouter3/public/login/cadastro', 'LoginController@cadastro_action')->name('cadastro');
 
-    SimpleRouter::get('/exercíciosIndividuais/SimpleRouter3/public/home/{id}/sobre', 'DefaultController@sobre')->name('cadastro');
+    SimpleRouter::get('/exercíciosIndividuais/SimpleRouter3/public/home/{id}/sobre', 'DefaultController@sobre')->name('sobre');
+
+    SimpleRouter::post('/exercíciosIndividuais/SimpleRouter3/public/home/{id}/reserva', 'EventoController@reserva')->name('cadastro');
 
     SimpleRouter::get('/exercíciosIndividuais/SimpleRouter3/public/sair', 'DefaultController@sair')->name('sair');
 

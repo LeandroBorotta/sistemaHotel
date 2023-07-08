@@ -19,6 +19,10 @@
         .justify{
             text-align: justify;
         }
+        input.transparent-input {
+        border: none;
+        pointer-events: none;
+        }
     </style>
 </head>
 <body>
@@ -73,14 +77,20 @@
                         </div>
                         
                         <div class="card-body">
-                            <div class="reservar text-center mb-3">
-                                <a class="btn btn-danger w-75" href="#">Reservar</a>
-                            </div>
+                            <form action="/exercíciosIndividuais/SimpleRouter3/public/home/{{hotel[0]['id']}}/reserva" method="post">
+                                <div class="reservar text-center mb-3">
+                                    <input type="submit" class="btn btn-danger w-75" value="Reservar">
+                                </div>
 
-                            <div class="pagar text-center">
-                               <span>Conta:</span>
-                               <p> R${{hotel[0]['preco']}} * 5 noites</p>
-                            </div>
+                                <div class="pagar text-center d-flex justify-content-center flex-column">
+                                    <input type="hidden" id="dataInicio" name="inicio" value="">
+                                    <input type="hidden" id="dataFinal" name="final" value="">
+                                    <div class="input d-flex text-center justify-content-center">
+                                        <p> R${{hotel[0]['preco']}} * <input class="transparent-input" readonly type="text" name="noites" id="noites"></p>
+                                    </div>
+                                    <p>Total: <input class="transparent-input" name="precoTotal" readonly type="text" id="total"></input></p>
+                                </div>
+                            </form>
                         </div>
                             
                     </div>
@@ -97,27 +107,100 @@
 
 
     <script>
-
-        document.addEventListener('DOMContentLoaded', function() {
+            
+            document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-            dateClick: function(info) {
-                alert('Data: ' + info.dateStr),
-                info.dayEl.style.backgroundColor = 'green';
-            },  
-            initialView: 'dayGridMonth',
-            locale: 'pt-br', 
-            buttonText: {
-            today: 'Hoje'
-            },
-            validRange: {
-            start: new Date().toISOString().split("T")[0], 
-            end: '2100-12-31'
+            var eventos = {{ eventos|json_encode|raw }};
+
+            var url = window.location.href;
+            var partes = url.split('/');
+            var idHotel = parseInt(partes[partes.length - 2]); 
+            
+            console.log(eventos);
+                
+            var eventosFiltrados = eventos.filter(function(evento) {
+                return evento.id_hotel === idHotel;
+            });
+            
+            console.log(eventosFiltrados);
+            var eventosFullCalendar = [];
+
+            for (var i = 0; i < eventosFiltrados.length; i++) {
+                eventosFullCalendar.push({
+                title: eventosFiltrados[i].title,
+                start: eventosFiltrados[i].inicio,
+                end: eventosFiltrados[i].final
+                });
             }
 
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                selectable: true,
+                select: function(info) {
+                var eventosExistentes = calendar.getEvents();
+                var isOverlap = false;
+
+                for (var i = 0; i < eventosExistentes.length; i++) {
+                    var eventoExistente = eventosExistentes[i];
+                    if (info.start < eventoExistente.end && info.end > eventoExistente.start) {
+                    isOverlap = true;
+                    break;
+                    }
+                }
+
+                if (isOverlap) {
+                    alert('O período selecionado já contém um evento existente. Escolha uma data vazia');
+                    calendar.unselect();    
+                } else {
+                    alert('Seleção iniciada em: ' + info.startStr + ' e terminada em: ' + info.endStr);
+                    calendar.addEvent({
+                    title: 'Marcado ',
+                    start: info.start,
+                    end: info.end
+                    });
+                    var start = info.start; // Data de início
+                    var end = info.end; // Data de fim
+
+                    var inicio = info.startStr; // Data inicio em formato de Date 
+                    var final = info.endStr; // Data final em formato de Date 
+
+                    var elementoInicio = document.getElementById("dataInicio");
+                    var elementoFinal = document.getElementById("dataFinal");
+
+                    elementoInicio.value = inicio;
+                    elementoFinal.value = final;
+
+                    // Calcular a diferença de noites
+                    var diffMilissegundos = Math.abs(end - start);
+                    var diffNoites = Math.ceil(diffMilissegundos / 86400000);
+
+                    // Atualizar o elemento HTML com o valor de noites
+                    var elementoNoites = document.getElementById("noites");
+                    elementoNoites.value = diffNoites + ' noites';
+
+                    var precoHotel = parseInt("{{hotel[0]['preco']}}"); // Converter o preço em uma variável numérica
+
+                    // Calcular o total
+                    var total = precoHotel * diffNoites;
+
+                    // Atualizar o elemento HTML com o valor total
+                    var elementoTotal = document.getElementById("total");
+                    elementoTotal.value = "R$" + total.toFixed(2); 
+                }
+                },
+                initialView: 'dayGridMonth',
+                locale: 'pt-br', 
+                buttonText: {
+                today: 'Hoje'
+                },
+                validRange: {
+                start: new Date().toISOString().split("T")[0], 
+                end: '2100-12-31'
+                },
+                events: eventosFullCalendar
             });
+
             calendar.render();
-        });
+            });
 
     </script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>

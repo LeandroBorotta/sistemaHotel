@@ -229,4 +229,17 @@ class Hotels extends DatabaseConnection{
                 return false;
             }
         }
+
+        public static function deletarEvento($id){
+            $pdo = self::getPDO();
+            $delete = $pdo->prepare("DELETE from eventos where hotel_id=:id");
+            $delete->bindValue(':id', $id);
+            $delete->execute();
+
+            if ($delete->rowCount() > 0) {
+                return true; 
+            } else {
+                return false;
+            }
+        }
 }

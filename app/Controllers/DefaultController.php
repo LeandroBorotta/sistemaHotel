@@ -5,6 +5,7 @@ use Demo\Template\Controller;
 use Demo\Models\Users;
 use Demo\Models\Hotels;
 use Demo\Models\Favorites;
+use Demo\Models\Eventos;
 
 class DefaultController extends Controller
 {
@@ -72,11 +73,15 @@ class DefaultController extends Controller
             exit;
         }
 
+        $eventos = Eventos::getEventos();
+
+
         $hotel = Hotels::getHotelById($id);
         $this->view('sobre.php', [
             'hotel' => $hotel,
             'nome' => $email,
-            'adm' => $loggedAdm
+            'adm' => $loggedAdm,
+            'eventos' => $eventos
         ]);
     }
 

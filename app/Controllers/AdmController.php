@@ -116,6 +116,7 @@ class AdmController extends Controller{
         $hotel = Hotels::getHotelById($id);
         Hotels::deletarHotel($hotel[0]['id']);
         Hotels::deletarFavorito($id);
+        Hotels::deletarEvento($hotel[0]['id']);
         header("location: /exercíciosIndividuais/SimpleRouter3/public/home/adm");
         exit;
     }
