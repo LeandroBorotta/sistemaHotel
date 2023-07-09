@@ -17,13 +17,13 @@
     <title>Login - Calendário</title>
 </head>
 <body>
-    <header class="container-fluid bg-dark text-light text-center">
+    <header class="container-fluid bg-dark text-primary text-center border-bottom">
         <h1>Login para agendamento</h1>
     </header>
 
 
     <main class="row container d-flex justify-content-center align-items-center vh-100">
-        <form action="/exercíciosIndividuais/SimpleRouter3/public/login" method="post" class="border p-3 col-6">
+        <form action="/exercíciosIndividuais/SimpleRouter3/public/login" method="post" class="border shadow p-5 col-6">
             <span class="text-danger">{{erro}}</span>
             <div class="row d-flex flex-column mb-5">
                 <label for="email">E-mail:</label>
@@ -38,7 +38,7 @@
             <div class="d-flex justify-content-center align-items-center">
                 <input class="btn btn-primary" type="submit" value="Entrar">
             </div>
-            <span class="d-flex justify-content-center align-items-center mt-2">Não possui conta ainda ?? <a class="" href="/exercíciosIndividuais/SimpleRouter3/public/login/cadastro">Crie uma conta</a></span>
+            <span class="d-flex justify-content-center align-items-center mt-2">Não possui conta ainda ?? <a class="nav-link" href="/exercíciosIndividuais/SimpleRouter3/public/login/cadastro">Crie uma conta</a></span>
         </form>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
