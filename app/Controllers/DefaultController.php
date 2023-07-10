@@ -22,12 +22,17 @@ class DefaultController extends Controller
         $loggedUser = isset($_SESSION['loggedUser']) ? $_SESSION['loggedUser'] : false;
         $idUser = isset($_SESSION['id_user']) ? $_SESSION['id_user'] : false;
         $email = isset($_SESSION['email']) ? $_SESSION['email'] : false;
-
+        if(!empty($_GET['search'])){
+            $pesquisa =  $_GET['search'];
+        }else{
+            $pesquisa = null;
+        }
         if (!$loggedUser) {
             header("Location: /exercíciosIndividuais/SimpleRouter3/public/login");
             exit;
         }
         Hotels::avaliacao();
+        $search = Hotels::getHotelsBySearch($pesquisa);
         $hotels = Hotels::getHotels();
 
         $starsData = [];
@@ -37,7 +42,7 @@ class DefaultController extends Controller
        
         $this->view('index.php',[
             'nome' => $email,
-            'hoteis' => $hotels,
+            'hoteis' => $search,
             'idUser' => $idUser,
             'starsData' => $starsData
         ]);
@@ -45,8 +50,18 @@ class DefaultController extends Controller
 
     public function homeAdm(){
         session_start();
+
         $loggedAdm = isset($_SESSION['loggedAdm']) ? $_SESSION['loggedAdm'] : false;
         $email = isset($_SESSION['email']) ? $_SESSION['email'] : false;
+
+        if(!empty($_GET['search'])){
+            $pesquisa =  $_GET['search'];
+        }else{
+            $pesquisa = null;
+        }
+
+        $search = Hotels::getHotelsBySearch($pesquisa);
+        
         if (!$loggedAdm) {
             header("Location: /exercíciosIndividuais/SimpleRouter3/public/login");
             exit;
@@ -56,7 +71,7 @@ class DefaultController extends Controller
 
         $this->view('adm.php',[
             'nome' => $email,
-            'hoteis' => $hotels,
+            'hoteis' => $search,
         ]);
     }
 

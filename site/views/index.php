@@ -33,9 +33,6 @@
             
             <div class="collapse navbar-collapse" id="MenuNavbar">
                 <div class="navbar-nav  ms-auto border-top mt-3">
-                    <a href="#" class="nav-link active">Menu 1</a>
-                    <a href="#" class="nav-link">Menu 2</a>
-                    <a href="#" class="nav-link">Menu 3</a>
                     <a class="nav-link" href="/exercíciosIndividuais/SimpleRouter3/public/sair"> SAIR</a>
                 </div>
             </div>
@@ -47,8 +44,10 @@
         <div class="container justify-content-end">
             <form action="#" class="d-flex">
                 <div class="input-group ms-auto bg-dark">
-                    <input type="search" class="form-control border-dark" placeholder="Buscar...">
-                    <button type="submit" class="btn btn-outline-primary">Buscar</button>
+                    <form method="get">
+                        <input type="search" name="search" id="search" class="form-control border-dark" placeholder="Buscar...">
+                        <button id="btnEnviar" type="submit"  onclick="searchData()" class="btn btn-outline-primary">Buscar</button>
+                    </form>
                 </div>
             </form>   
         </div>
@@ -86,7 +85,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
             var favoriteIcons = document.querySelectorAll('.bi-star');
-
                 favoriteIcons.forEach(function(favoriteIcon) {
                 favoriteIcon.addEventListener('click', function() {
 

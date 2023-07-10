@@ -143,7 +143,23 @@ class Hotels extends DatabaseConnection{
             }
         }
 
-
+        public static function getHotelsBySearch($search = null) {
+            $pdo = self::getPDO();
+            $select = $pdo->prepare("SELECT * FROM hoteis WHERE nome LIKE :nome");
+            $select->bindValue(':nome', '%' . $search . '%');
+            $select->execute();
+            
+            $hotels = $select->fetchAll(PDO::FETCH_ASSOC);
+            
+            if (count($hotels) === 0) {
+                $selectNota = $pdo->prepare("SELECT *, (SELECT COUNT(*) FROM favorites WHERE favorites.hotel_id = hoteis.id) AS num_favorites FROM hoteis ORDER BY num_favorites DESC, nota DESC");
+                $selectNota->execute();
+            
+                $hotels = $selectNota->fetchAll(PDO::FETCH_ASSOC);
+            }
+            
+            return $hotels;
+        }
 
         public static function getHotels() {
             $pdo = self::getPDO();

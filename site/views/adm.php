@@ -44,8 +44,10 @@
         <div class="container justify-content-end">
             <form action="#" class="d-flex">
                 <div class="input-group ms-auto bg-dark">
-                    <input type="search" class="form-control border-dark" placeholder="Buscar...">
-                    <button type="submit" class="btn btn-outline-primary">Buscar</button>
+                    <form method="get">
+                        <input type="search" name="search" id="search" class="form-control border-dark" placeholder="Buscar...">
+                        <button id="btnEnviar" type="submit"  onclick="searchData()" class="btn btn-outline-primary">Buscar</button>
+                    </form>
                 </div>
             </form>   
         </div>
